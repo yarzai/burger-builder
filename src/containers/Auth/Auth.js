@@ -7,6 +7,7 @@ import Spinner from "../../components/UI/Spinner/Spinner";
 import classes from "./Auth.module.css";
 import * as actions from "../../store/actions";
 import { Redirect } from "react-router";
+import { checkValidaty } from "../../shared/validation";
 
 class Auth extends Component {
   state = {
@@ -49,27 +50,6 @@ class Auth extends Component {
     }
   }
 
-  checkValidaty(value, rules) {
-    let isValid = true;
-
-    if (rules.required) {
-      isValid = value.trim() !== "" && isValid;
-    }
-
-    if (rules.minLength) {
-      isValid = value.length >= rules.minLength && isValid;
-    }
-
-    if (rules.maxLength) {
-      isValid = value.length <= rules.maxLength && isValid;
-    }
-
-    if (rules.minLength && rules.maxLength) {
-      isValid = value.length >= rules.minLength && isValid;
-    }
-    return isValid;
-  }
-
   switchAuthModeHandler = () => {
     this.setState((prevState) => {
       return {
@@ -79,13 +59,12 @@ class Auth extends Component {
   };
 
   inputChangedHandler = (event, elementName) => {
-    console.log("changed");
     const updatedControls = {
       ...this.state.controls,
       [elementName]: {
         ...this.state.controls[elementName],
         value: event.target.value,
-        valid: this.checkValidaty(
+        valid: checkValidaty(
           event.target.value,
           this.state.controls[elementName].validation
         ),

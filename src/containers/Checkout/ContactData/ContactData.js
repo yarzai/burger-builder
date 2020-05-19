@@ -9,6 +9,7 @@ import Spinner from "../../../components/UI/Spinner/Spinner";
 import Input from "../../../components/UI/Input/Input";
 import WithErrorHandler from "../../../hoc/WithErrorHandler/WithErrorHandler";
 import * as actions from "../../../store/actions/index";
+import { checkValidaty } from "../../../shared/validation";
 
 class ContactData extends Component {
   state = {
@@ -132,31 +133,10 @@ class ContactData extends Component {
       ingredients: this.props.ings,
       price: this.props.price,
       orderData: formData,
-      userId: this.props.userId
+      userId: this.props.userId,
     };
     this.props.onOrderHandler(order, this.props.token);
   };
-
-  checkValidaty(value, rules) {
-    let isValid = true;
-
-    if (rules.required) {
-      isValid = value.trim() !== "" && isValid;
-    }
-
-    if (rules.minLength) {
-      isValid = value.length >= rules.minLength && isValid;
-    }
-
-    if (rules.maxLength) {
-      isValid = value.length <= rules.maxLength && isValid;
-    }
-
-    if (rules.minLength && rules.maxLength) {
-      isValid = value.length >= rules.minLength && isValid;
-    }
-    return isValid;
-  }
 
   inputChangedHandler = (event, inputIdetifier) => {
     const form = { ...this.state.orderForm };
@@ -170,7 +150,7 @@ class ContactData extends Component {
     formElement.value = event.target.value;
 
     // cheking input validaty
-    formElement.valid = this.checkValidaty(
+    formElement.valid = checkValidaty(
       formElement.value,
       formElement.validation
     );
@@ -232,7 +212,7 @@ const mapStateToProps = (state) => {
     price: state.burgerBuilder.totalPrice,
     loading: state.order.loading,
     token: state.auth.token,
-    userId: state.auth.userId
+    userId: state.auth.userId,
   };
 };
 

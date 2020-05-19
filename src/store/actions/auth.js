@@ -11,7 +11,7 @@ const authSuccess = (token, userId) => {
   return {
     type: actionTypes.AUTH_SUCCESS,
     token: token,
-    userId: userId
+    userId: userId,
   };
 };
 
@@ -61,7 +61,6 @@ export const auth = (email, password, isSignup) => {
         const expirationDate = new Date(
           new Date().getTime() + response.data.expiresIn * 1000
         );
-        console.log(response);
         localStorage.setItem("token", response.data.idToken);
         localStorage.setItem("expirationDate", expirationDate);
         localStorage.setItem("userId", response.data.localId);
@@ -69,7 +68,6 @@ export const auth = (email, password, isSignup) => {
         dispatch(checkAuthTimeout(response.data.expiresIn));
       })
       .catch((error) => {
-        console.log(error);
         dispatch(authFail(error.response.data.error));
       });
   };
@@ -86,7 +84,6 @@ export const setAuthRedirectPath = (path) => {
 export const authCheckState = () => {
   return (dispatch) => {
     const token = localStorage.getItem("token");
-    console.log("Trying to auto logout");
     if (!token) {
       dispatch(logout());
     } else {
