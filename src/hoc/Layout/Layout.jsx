@@ -1,45 +1,39 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 
 import classes from "./Layout.module.css";
 import Toolbar from "../../components/Navigation/Toolbar/Toolbar";
 import SideDrawer from "../../components/Navigation/SideDrawer/SideDrawer";
 
-class Layout extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showSideDrawer: false,
-    };
-  }
+const Layout = (props) => {
+  const [showSideDrawer, setSideDrawer] = useState(false);
 
-  sideDrawerClosedHandler = () => {
-    this.setState({ showSideDrawer: false });
+  const { isAuthenticated, children } = props;
+
+  const sideDrawerClosedHandler = () => {
+    setSideDrawer(false);
   };
 
-  sideDrawerToggleHandler = () => {
-    this.setState((prevState) => {
-      return { showSideDrawer: !prevState.showSideDrawer };
-    });
+  const sideDrawerToggleHandler = () => {
+    setSideDrawer((prevState) => !prevState);
   };
-  render() {
-    return (
-      <React.Fragment>
-        <Toolbar
-          drawerToggleClicked={this.sideDrawerToggleHandler}
-          isAuthenticated={this.props.isAuthenticated}
-        />
-        <SideDrawer
-          closed={this.sideDrawerClosedHandler}
-          open={this.state.showSideDrawer}
-          isAuthenticated={this.props.isAuthenticated}
-        />
-        <div>Toolbar, SideDrawer, Backdrop</div>
-        <main className={classes.content}>{this.props.children}</main>
-      </React.Fragment>
-    );
-  }
-}
+
+  return (
+    <React.Fragment>
+      <Toolbar
+        drawerToggleClicked={sideDrawerToggleHandler}
+        isAuthenticated={isAuthenticated}
+      />
+      <SideDrawer
+        closed={sideDrawerClosedHandler}
+        open={showSideDrawer}
+        isAuthenticated={isAuthenticated}
+      />
+      <div>Toolbar, SideDrawer, Backdrop</div>
+      <main className={classes.content}>{children}</main>
+    </React.Fragment>
+  );
+};
 
 const mapStateToProps = (state) => {
   return {
